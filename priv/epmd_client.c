@@ -130,14 +130,5 @@ int main(int argc, char** argv) {
   FD_ZERO(&read_fds);
   FD_SET(STDIN_FILENO, &read_fds);
   FD_SET(epmd_sock, &read_fds);
-  int num_fds = select(2, &read_fds, 0, 0, 0);
-  fprintf(stderr, "selected %d\n", num_fds);
-  if ( num_fds > 0 ) {
-    if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-      fprintf(stderr, "got stdin input");
-    }
-    if (FD_ISSET(epmd_sock, &read_fds)) {
-      fprintf(stderr, "got epmd_sock input");
-    }
-  }
+  select(epmd_sock + 1, &read_fds, 0, 0, 0);
 }
