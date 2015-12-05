@@ -1,3 +1,8 @@
 .erlang.mk
 deps
 *.d
+*.o
+*.beam
+core
+a.out
+ebin/
