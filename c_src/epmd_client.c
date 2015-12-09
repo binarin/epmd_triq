@@ -12,10 +12,13 @@
 // max 2-byte length
 #define EPMD_LENGTH 65535
 
+int parse_opts(int argc, char** argv, char **node_name, int *epmd_port);
+int connect_to_epmd(unsigned int port);
+void send_alive2_req(int sock, int port_no, const char* node_name);
+
 int parse_opts(int argc, char** argv, char **node_name, int *epmd_port) {
   int c;
   while (1) {
-    int this_option_optind = optind ? optind : 1;
     int option_index = 0;
     static struct option long_options[] = {
       {"name", required_argument, 0, 'n'},
@@ -123,7 +126,7 @@ int main(int argc, char** argv) {
   }
 
   int epmd_sock = connect_to_epmd(epmd_port);
-  send_alive2_req(epmd_sock, 6666, "test");
+  send_alive2_req(epmd_sock, 6666, node_name);
 
   fprintf(stderr, "waiting for input on stdin and %d\n", epmd_sock);
   fd_set read_fds;
