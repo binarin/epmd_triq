@@ -6,3 +6,4 @@ deps
 core
 a.out
 ebin/
+*.plt
