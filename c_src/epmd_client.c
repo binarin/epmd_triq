@@ -97,7 +97,6 @@ void send_alive2_req(int sock, int port_no, const char* node_name) {
   int len = ptr - buf;
   ptr = buf;
   put16(ptr, len - 2);
-  fprintf(stderr, "%x\n", len);
 
   int bytes_written = write(sock, buf, len);
   if ( bytes_written != len ) {
@@ -107,14 +106,17 @@ void send_alive2_req(int sock, int port_no, const char* node_name) {
 
   int resp_bytes = read(sock, buf, 4);
   if (resp_bytes != 4) {
-    fprintf(stderr, "Failed to receive alive resp\n");
+    fprintf(stdout, "Failed to receive alive resp\n");
     exit(1);
   }
 
   if (buf[1]) {
-    fprintf(stderr, "Non successful alive resp: %d\n", buf[1]);
+    fprintf(stdout, "Non successful alive resp: %d\n", buf[1]);
     exit(1);
   }
+
+  fprintf(stdout, "ok");
+  fflush(stdout);
 }
 
 int main(int argc, char** argv) {
@@ -128,7 +130,6 @@ int main(int argc, char** argv) {
   int epmd_sock = connect_to_epmd(epmd_port);
   send_alive2_req(epmd_sock, 6666, node_name);
 
-  fprintf(stderr, "waiting for input on stdin and %d\n", epmd_sock);
   fd_set read_fds;
   FD_ZERO(&read_fds);
   FD_SET(STDIN_FILENO, &read_fds);
