@@ -7,3 +7,6 @@ core
 a.out
 ebin/
 *.plt
+/priv/epmd_proxy
+priv/q
+priv/pseudo_node
