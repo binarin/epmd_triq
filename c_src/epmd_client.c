@@ -99,6 +99,16 @@ void send_alive2_req(int sock, int port_no, const char* node_name) {
   put16(ptr, len - 2);
 
   int bytes_written = write(sock, buf, len);
+  // give epmd some time to process data. Otherwise SO_LINGER settings
+  // below may cause discarding of this data even before processing by epmd.
+  sleep(1);
+
+  // Close socket in such a way that write(2) will imediately fail on
+  // the other side of the socket.
+  struct linger lo = { 1, 0 };
+  setsockopt(sock, SOL_SOCKET, SO_LINGER, &lo, sizeof(lo));
+  close(sock);
+
   if ( bytes_written != len ) {
     perror("write alive2");
     exit(1);
